@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Chart from "react-apexcharts";
 import {
   //   RiFilter2Fill,
   RiSearch2Line,
@@ -22,12 +23,13 @@ const Dashboard = () => {
   const [productoInput, setProductoInput] = useState(""); // Cambia a producto seleccionado
   const [productos, setProductos] = useState([]);
   const [productsPronosticos, setProductsPronosticos] = useState([]);
-  //   const [topProducts, setTopProducts] = useState([]);
-  //   const [forecastTopProducts, setForecastTopProducts] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
+  const [forecastTopProducts, setForecastTopProducts] = useState([]);
   const [salesByMonthYear, setSalesByMonthYear] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  //   const [topNextMonthForecast, setTopNextMonthForecast] = useState([]);
+  const [topNextMonthForecast, setTopNextMonthForecast] = useState([]);
+  const [chartOptions, setChartOptions] = useState({});
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -107,6 +109,134 @@ const Dashboard = () => {
       console.error("Error al obtener las ventas por mes y año:", error);
     }
   };
+
+  const [chartTopData, setChartTopData] = useState({
+    options: {
+      chart: {
+        type: "bar",
+        height: 350,
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          speed: 800,
+          animateGradually: {
+            enabled: true,
+            delay: 150,
+          },
+          dynamicAnimation: {
+            enabled: true,
+            speed: 350,
+          },
+        },
+      },
+      xaxis: {
+        categories: [],
+      },
+    },
+    series: [
+      {
+        name: "Gráfica de Productos Más Vendidos",
+        data: [],
+      },
+    ],
+  });
+
+  const [chartData, setChartData] = useState({
+    options: {
+      chart: {
+        type: "bar",
+        height: 350,
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          speed: 800,
+          animateGradually: {
+            enabled: true,
+            delay: 150,
+          },
+          dynamicAnimation: {
+            enabled: true,
+            speed: 350,
+          },
+        },
+      },
+      xaxis: {
+        categories: [],
+      },
+    },
+    series: [
+      {
+        name: "Gráfica de Productos Pronosticados",
+        data: [],
+      },
+    ],
+  });
+
+  const getTopNextMonthForecast = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/sales-forecast-for-next-month/"
+      );
+      setTopNextMonthForecast(response.data);
+      const labels = topNextMonthForecast.map((item) => item.Producto);
+      const data = topNextMonthForecast.map((item) =>
+        parseFloat(item.CantidadPronosticada).toFixed(2)
+      );
+
+      // Actualizar chartData con los datos recuperados
+      setChartData((prevChartData) => ({
+        ...prevChartData,
+        options: {
+          ...prevChartData.options,
+          xaxis: {
+            categories: labels,
+          },
+        },
+        series: [
+          {
+            ...prevChartData.series[0],
+            data: data,
+          },
+        ],
+      }));
+    } catch (error) {
+      console.error(
+        "Error al obtener el top 10 de pronósticos para el próximo mes:",
+        error
+      );
+    }
+  };
+
+  const getTopProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/top-products/");
+      setTopProducts(response.data);
+      console.log(topProducts);
+      // Crear etiquetas y datos para el gráfico de barras
+      const labels = topProducts.map((item) => item.Producto);
+      const data = topProducts.map((item) =>
+        parseFloat(item.Cantidad).toFixed(2)
+      );
+      setChartTopData((prevChartTopData) => ({
+        ...prevChartTopData,
+        options: {
+          ...prevChartTopData.options,
+          xaxis: {
+            categories: labels,
+          },
+        },
+        series: [
+          {
+            ...prevChartTopData.series[0],
+            data: data,
+          },
+        ],
+      }));
+    } catch (error) {
+      console.error("Error al obtener el top 10 de productos:", error);
+    }
+  };
+
   return (
     <div>
       {/* Title */}
@@ -182,7 +312,7 @@ const Dashboard = () => {
         </div>
         <Tab.Panels className="mt-8">
           <Tab.Panel>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
               <div className="bg-secondary-100 p-8 rounded-lg">
                 {/* Title card */}
                 <div className="flex items-center justify-between mb-8">
@@ -190,7 +320,7 @@ const Dashboard = () => {
                     Pronostico de todos los productos
                   </h1>
                   <Link to="/" className="flex items-center gap-2 text-primary">
-                    Support <RiArrowRightLine />
+                    <RiArrowRightLine />
                   </Link>
                 </div>
                 {/* Content card */}
@@ -236,7 +366,7 @@ const Dashboard = () => {
                     Ventas por fecha
                   </h1>
                   <Link to="/" className="flex items-center gap-2 text-primary">
-                    All FAQ <RiArrowRightLine />
+                    <RiArrowRightLine />
                   </Link>
                 </div>
                 {/* Content card */}
@@ -311,173 +441,113 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
+            <div className="bg-secondary-100 p-8 rounded-lg mb-6">
+              <div className="p-8">
+                <h1 className="text-3xl mb-8">
+                  Historial de productos más vendidos
+                </h1>
+                <button
+                  type="button"
+                  onClick={() => getTopProducts()}
+                  className="bg-primary text-white rounded-lg py-3 px-6"
+                >
+                  Obtener historial de productos más vendidos
+                </button>
+              </div>
+              <Chart
+                options={chartTopData.options}
+                series={chartTopData.series}
+                type="bar"
+                className="w-full"
+                height={500}
+              />
+            </div>
+            <div className="bg-secondary-100 p-8 rounded-lg">
+              <div className="p-8">
+                <h1 className="text-3xl mb-8">
+                  Pronóstico de productos más vendidos
+                </h1>
+                <button
+                  type="button"
+                  onClick={() => getTopNextMonthForecast()}
+                  className="bg-primary text-white rounded-lg py-3 px-6"
+                >
+                  Obtener pronóstico de productos más vendidos
+                </button>
+              </div>
+              <Chart
+                options={chartData.options}
+                series={chartData.series}
+                type="bar"
+                className="w-full"
+                height={500}
+              />
+            </div>
           </Tab.Panel>
           <Tab.Panel>
             <div className="bg-secondary-100 p-8 rounded-lg grid grid-cols-1 xl:grid-cols-4 gap-8">
               {/* Section 1 */}
               <div className="md:col-span-3">
-                <form>
-                  <div className="relative">
-                    <RiSearch2Line className="absolute top-1/2 -translate-y-1/2 left-4" />
-                    <input
-                      type="text"
-                      className="bg-secondary-900 outline-none py-2 pr-4 pl-10 rounded-lg placeholder:text-gray-500 w-full"
-                      placeholder="Search for anything"
-                    />
-                  </div>
-                </form>
-                <h1 className="text-white text-2xl my-8">Public tickets</h1>
+                <div className="relative">
+                  <RiSearch2Line className="absolute top-1/2 -translate-y-1/2 left-4" />
+                  <select
+                    className="bg-secondary-900 outline-none py-2 pr-4 pl-10 rounded-lg placeholder:text-gray-500 w-full"
+                    value={productoInput}
+                    onChange={(e) => setProductoInput(e.target.value)}
+                  >
+                    <option value="">Selecciona un producto</option>
+                    {productos.map((producto) => (
+                      <option key={producto} value={producto}>
+                        {producto}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <h1 className="text-white text-2xl my-8">Por producto</h1>
+
                 {/* Tickets */}
                 <div>
                   {/* Ticket */}
                   <div className="flex flex-col gap-2 mb-8">
                     <div className="flex flex-wrap items-center gap-4">
                       <RiTicketLine className="md:text-2xl text-yellow-500" />
-                      <Link
-                        to="/"
-                        className="md:text-xl hover:text-blue-500 transition-colors"
+                      <button
+                        type="button"
+                        onClick={() => getForecast(productoInput)}
+                        className="bg-secondary-900 rounded-lg p-3 ml-8 text-white hover:bg-secondary-900/50 hover:text-gray-200 transition-colors"
                       >
-                        How to use Netronic with Django Framework?
-                      </Link>
-                      <span className="hidden md:block bg-secondary-900 text-white text-sm py.0.5 px-2 rounded-lg">
-                        React
-                      </span>
-                    </div>
-                    <div className="md:px-10">
-                      <p className="text-gray-500">
-                        By Keenthemes to save tons and more to time money
-                        projects are listed amazing outstanding projects are
-                        listed
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2 mb-8">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <RiTicketLine className="md:text-2xl text-blue-500" />
-                      <Link
-                        to="/"
-                        className="md:text-xl hover:text-blue-500 transition-colors"
-                      >
-                        How to use Netronic with Django Framework?
-                      </Link>
-                      <span className="hidden md:block bg-secondary-900 text-white text-sm py.0.5 px-2 rounded-lg">
-                        React
-                      </span>
-                    </div>
-                    <div className="md:px-10">
-                      <p className="text-gray-500">
-                        By Keenthemes to save tons and more to time money
-                        projects are listed amazing outstanding projects are
-                        listed
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2 mb-8">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <RiTicketLine className="md:text-2xl text-green-500" />
-                      <Link
-                        to="/"
-                        className="md:text-xl hover:text-blue-500 transition-colors"
-                      >
-                        How to use Netronic with Django Framework?
-                      </Link>
-                      <span className="hidden md:block bg-secondary-900 text-white text-sm py.0.5 px-2 rounded-lg">
-                        React
-                      </span>
-                    </div>
-                    <div className="md:px-10">
-                      <p className="text-gray-500">
-                        By Keenthemes to save tons and more to time money
-                        projects are listed amazing outstanding projects are
-                        listed
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2 mb-8">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <RiTicketLine className="md:text-2xl text-yellow-500" />
-                      <Link
-                        to="/"
-                        className="md:text-xl hover:text-blue-500 transition-colors"
-                      >
-                        How to use Netronic with Django Framework?
-                      </Link>
-                      <span className="hidden md:block bg-secondary-900 text-white text-sm py.0.5 px-2 rounded-lg">
-                        React
-                      </span>
-                    </div>
-                    <div className="md:px-10">
-                      <p className="text-gray-500">
-                        By Keenthemes to save tons and more to time money
-                        projects are listed amazing outstanding projects are
-                        listed
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2 mb-8">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <RiTicketLine className="md:text-2xl text-yellow-500" />
-                      <Link
-                        to="/"
-                        className="md:text-xl hover:text-blue-500 transition-colors"
-                      >
-                        How to use Netronic with Django Framework?
-                      </Link>
-                      <span className="hidden md:block bg-secondary-900 text-white text-sm py.0.5 px-2 rounded-lg">
-                        React
-                      </span>
-                    </div>
-                    <div className="md:px-10">
-                      <p className="text-gray-500">
-                        By Keenthemes to save tons and more to time money
-                        projects are listed amazing outstanding projects are
-                        listed
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                {/* Pagination */}
-                <div className="p-8 flex justify-center">
-                  <nav className="flex items-center gap-2">
-                    <button className="p-2 hover:bg-secondary-900 rounded-lg transition-colors hover:text-gray-100">
-                      <RiArrowLeftSLine />
-                    </button>
-                    <div className="flex items-center">
-                      <button className="py-2 px-4 hover:bg-secondary-900 rounded-lg transition-colors hover:text-gray-100">
-                        1
-                      </button>
-                      <button className="py-2 px-4 bg-secondary-900 rounded-lg transition-colors text-gray-100">
-                        2
-                      </button>
-                      <button className="py-2 px-4 hover:bg-secondary-900 rounded-lg transition-colors hover:text-gray-100">
-                        3
-                      </button>
-                      <button className="py-2 px-4 hover:bg-secondary-900 rounded-lg transition-colors hover:text-gray-100">
-                        4
-                      </button>
-                      <button className="py-2 px-4 hover:bg-secondary-900 rounded-lg transition-colors hover:text-gray-100">
-                        5
+                        Obtener pronóstico de {productoInput}
                       </button>
                     </div>
-                    <button className="p-2 hover:bg-secondary-900 rounded-lg transition-colors hover:text-gray-100">
-                      <RiArrowRightSLine />
-                    </button>
-                  </nav>
+                    <div className="md:px-10">
+                      <ul className="mx-5" style={{ listStyleType: "none" }}>
+                        {pronosticos.map((pronostico, index) => (
+                          <li key={index}>
+                            <b>Producto: </b>
+                            {pronostico.Producto}
+                            <br />
+                            <b> Pronóstico: </b>
+                            {pronostico.Pronostico} unidades
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
               {/* Section 2 */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-8">
                 <div className="bg-secondary-900 p-8 rounded-lg xl:mb-8">
-                  <h1 className="text-2xl text-white mb-8">More channels</h1>
+                  <h1 className="text-2xl text-white mb-8">Ver Mas</h1>
                   <div>
                     <div className="flex items-center gap-4 mb-8">
                       <RiFileTextLine className="text-4xl text-primary" />
                       <div className="flex flex-col gap-1">
-                        <h5 className="text-white">Project Briefing</h5>
+                        <h5 className="text-white">Sobre Nosotros</h5>
                         <p className="text-xs">
                           Check out our{" "}
                           <Link to="/" className="text-primary">
-                            Support Policy
+                            Soporte
                           </Link>
                         </p>
                       </div>
@@ -485,11 +555,11 @@ const Dashboard = () => {
                     <div className="flex items-center gap-4 mb-8">
                       <RiDiscussLine className="text-4xl text-primary" />
                       <div className="flex flex-col gap-1">
-                        <h5 className="text-white">More to discuss?</h5>
+                        <h5 className="text-white">Alguna Pregunta?</h5>
                         <p className="text-xs">
-                          Check out our{" "}
+                          Mira aquí{" "}
                           <Link to="/" className="text-primary">
-                            jorge@gmail.com
+                            agranel@gmail.com
                           </Link>
                         </p>
                       </div>
@@ -497,11 +567,11 @@ const Dashboard = () => {
                     <div className="flex items-center gap-4 mb-8">
                       <RiTwitterLine className="text-4xl text-primary" />
                       <div className="flex flex-col gap-1">
-                        <h5 className="text-white">Latest News</h5>
+                        <h5 className="text-white">Noticias</h5>
                         <p className="text-xs">
-                          Follow us at{" "}
+                          Síguenos en{" "}
                           <Link to="/" className="text-primary">
-                            KeenThemes Twitter
+                            @AGranel Twitter
                           </Link>
                         </p>
                       </div>
@@ -509,11 +579,11 @@ const Dashboard = () => {
                     <div className="flex items-center gap-4 mb-8">
                       <RiGithubLine className="text-4xl text-primary" />
                       <div className="flex flex-col gap-1">
-                        <h5 className="text-white">Github Access</h5>
+                        <h5 className="text-white">Github</h5>
                         <p className="text-xs">
-                          Our github repo{" "}
+                          Developer github{" "}
                           <Link to="/" className="text-primary">
-                            KeenThemes Github
+                            @migitmon Github
                           </Link>
                         </p>
                       </div>
@@ -521,14 +591,14 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="bg-secondary-900 p-8 rounded-lg">
-                  <h1 className="text-2xl text-white mb-8">Documentation</h1>
+                  <h1 className="text-2xl text-white mb-8">Detalles</h1>
                   <ul className="flex flex-col gap-y-4">
                     <li>
                       <Link
                         to="/"
                         className="flex items-center gap-2 hover:text-primary transition-colors"
                       >
-                        <RiArrowRightSLine /> Angular Admin
+                        <RiArrowRightSLine /> AGranel Admin
                       </Link>
                     </li>
                     <li>
@@ -536,31 +606,7 @@ const Dashboard = () => {
                         to="/"
                         className="flex items-center gap-2 hover:text-primary transition-colors"
                       >
-                        <RiArrowRightSLine /> React Admin
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/"
-                        className="flex items-center gap-2 hover:text-primary transition-colors"
-                      >
-                        <RiArrowRightSLine /> Vue Admin
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/"
-                        className="flex items-center gap-2 hover:text-primary transition-colors"
-                      >
-                        <RiArrowRightSLine /> Nich Admin
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/"
-                        className="flex items-center gap-2 hover:text-primary transition-colors"
-                      >
-                        <RiArrowRightSLine /> Dashboard Admin
+                        <RiArrowRightSLine /> AGranel User
                       </Link>
                     </li>
                   </ul>
