@@ -9,7 +9,6 @@ import {
   RiArrowRightLine,
   RiArrowRightSLine,
   RiTicketLine,
-  RiArrowLeftSLine,
   RiFileTextLine,
   RiDiscussLine,
   RiTwitterLine,
@@ -24,12 +23,10 @@ const Dashboard = () => {
   const [productos, setProductos] = useState([]);
   const [productsPronosticos, setProductsPronosticos] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
-  const [forecastTopProducts, setForecastTopProducts] = useState([]);
   const [salesByMonthYear, setSalesByMonthYear] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [topNextMonthForecast, setTopNextMonthForecast] = useState([]);
-  const [chartOptions, setChartOptions] = useState({});
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
