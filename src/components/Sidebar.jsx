@@ -5,11 +5,14 @@ import {
   RiBarChart2Line,
   RiEarthLine,
   RiCustomerService2Line,
-  RiCalendarTodoLine,
   RiLogoutCircleRLine,
   RiArrowRightSLine,
   RiMenu3Line,
   RiCloseLine,
+  RiDashboardLine,
+  RiShoppingBag3Line,
+  RiShoppingCart2Line,
+  RiWalletLine,
 } from "react-icons/ri";
 
 const Sidebar = () => {
@@ -40,15 +43,32 @@ const Sidebar = () => {
                 to="/dashboard"
                 className="flex items-center gap-4 py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
               >
-                <RiCalendarTodoLine className="text-primary" /> Dashboard
+                <RiDashboardLine className="text-primary" /> Dashboard
               </Link>
             </li>
             <li>
               <Link
-                to="/"
+                to="/ventas"
                 className="flex items-center gap-4 py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
               >
-                <RiCalendarTodoLine className="text-primary" /> Ventas
+                <RiShoppingCart2Line className="text-primary" /> Ventas
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to="/productos"
+                className="flex items-center gap-4 py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
+              >
+                <RiShoppingBag3Line className="text-primary" /> Productos
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/inventario"
+                className="flex items-center gap-4 py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
+              >
+                <RiWalletLine className="text-primary" /> Inventario
               </Link>
             </li>
             <li>
@@ -103,22 +123,6 @@ const Sidebar = () => {
               >
                 <RiCustomerService2Line className="text-primary" /> Soporte
                 técnico
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/"
-                className="flex items-center gap-4 py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
-              >
-                <RiCalendarTodoLine className="text-primary" /> Productos
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/"
-                className="flex items-center gap-4 py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
-              >
-                <RiCalendarTodoLine className="text-primary" /> Inventario
               </Link>
             </li>
           </ul>

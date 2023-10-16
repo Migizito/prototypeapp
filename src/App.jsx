@@ -9,10 +9,12 @@ import Register from "./pages/auth/Register";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 //Pages admin
 import Home from "./pages/admin/Home";
-import Chat from "./pages/admin/Chat";
+import Ventas from "./pages/admin/Ventas";
 import Tickets from "./pages/admin/Tickets";
 import Profile from "./pages/admin/Profile";
 import Dashboard from "./pages/admin/Dashboard";
+import Inventario from "./pages/admin/Inventario";
+import Productos from "./pages/admin/Productos";
 
 function App() {
   return (
@@ -25,7 +27,9 @@ function App() {
         </Route>
         <Route path="/" element={<LayoutAdmin />}>
           <Route index element={<Home />} />
-          <Route path="chat" element={<Chat />} />
+          <Route path="ventas" element={<Ventas />} />
+          <Route path="inventario" element={<Inventario />} />
+          <Route path="productos" element={<Productos />} />
           <Route path="tickets" element={<Tickets />} />
           <Route path="perfil" element={<Profile />} />
           <Route path="dashboard" element={<Dashboard />} />
