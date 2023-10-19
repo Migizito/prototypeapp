@@ -131,6 +131,9 @@ const Dashboard = () => {
           },
         },
       },
+      fill: {
+        colors: ["#3F93A2"],
+      },
     },
     series: [
       {
@@ -499,7 +502,7 @@ const Dashboard = () => {
                 <button
                   type="button"
                   onClick={() => getTopProducts()}
-                  className="bg-primary text-white rounded-lg py-3 px-6"
+                  className="bg-third text-white rounded-lg py-3 px-6"
                 >
                   Obtener historial de productos más vendidos
                 </button>
@@ -644,7 +647,7 @@ const Dashboard = () => {
                 <button
                   type="button"
                   onClick={() => getTopProducts()}
-                  className="bg-primary text-white rounded-lg py-3 px-6"
+                  className="bg-third text-white rounded-lg py-3 px-6"
                 >
                   Obtener historial de productos más vendidos
                 </button>
@@ -789,7 +792,7 @@ const Dashboard = () => {
                 <button
                   type="button"
                   onClick={() => getTopProducts()}
-                  className="bg-primary text-white rounded-lg py-3 px-6"
+                  className="bg-third text-white rounded-lg py-3 px-6"
                 >
                   Obtener historial de productos más vendidos
                 </button>
