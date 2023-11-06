@@ -46,8 +46,14 @@ const Dashboard = () => {
         setProductos(response.data.productos);
         Swal.fire({
           icon: "success",
-          title: "Archivo CSV cargado exitosamente!",
-          text: "Archivo Subido Correctamente",
+          title:
+            "<h5 style='color:white'>" +
+            "Archivo CSV cargado exitosamente!" +
+            "</h5>",
+          text: "Archivo CSV subido exitosamente",
+          color: "white",
+          background: "#1E1F25",
+          confirmButtonColor: "#0090EB",
         });
       }
     } catch (error) {
@@ -372,20 +378,20 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="bg-secondary-100 p-8 mb-6 rounded-b-lg">
-          <Tab.List className="flex flex-col md:flex-row md:items-center md:justify-between gap-x-2 gap-y-6 bg-secondary-900/50 py-3 px-4 rounded-lg">
+          <Tab.List className="flex flex-col md:flex-row md:items-center md:justify-between gap-x-2 gap-y-6 bg-secondary-900 py-3 px-4 rounded-lg">
             <div className="flex flex-col md:flex-row md:items-center gap-2">
-              <Tab className="py-2 px-4 rounded-lg hover:bg-secondary-900 hover:text-gray-100 transition-colors outline-none ui-selected:bg-secondary-900 ui-selected:text-gray-100">
+              <Tab className="py-2 px-4 rounded-lg hover:bg-secondary-100 hover:text-gray-100 transition-colors outline-none ui-selected:bg-secondary-100 ui-selected:text-gray-100">
                 Modelo Suavizado Exponencial
               </Tab>
-              <Tab className="py-2 px-4 rounded-lg hover:bg-secondary-900 hover:text-gray-100 transition-colors outline-none ui-selected:bg-secondary-900 ui-selected:text-gray-100">
+              <Tab className="py-2 px-4 rounded-lg hover:bg-secondary-100 hover:text-gray-100 transition-colors outline-none ui-selected:bg-secondary-100 ui-selected:text-gray-100">
                 Modelo ARIMA
               </Tab>
-              <Tab className="py-2 px-4 rounded-lg hover:bg-secondary-900 hover:text-gray-100 transition-colors outline-none ui-selected:bg-secondary-900 ui-selected:text-gray-100">
+              <Tab className="py-2 px-4 rounded-lg hover:bg-secondary-100 hover:text-gray-100 transition-colors outline-none ui-selected:bg-secondary-100 ui-selected:text-gray-100">
                 Modelo SARIMA
               </Tab>
             </div>
             <div className="flex justify-center">
-              <div className="bg-primary/90 text-black hover:bg-primary flex items-center gap-2 py-2 px-4 rounded-lg transition-colors">
+              <div className="bg-primary/50 text-gray-200 hover:bg-primary/80 flex items-center gap-2 py-2 px-4 rounded-lg transition-colors">
                 Modelos
               </div>
             </div>
@@ -397,11 +403,8 @@ const Dashboard = () => {
               <div className="bg-secondary-100 p-8 rounded-lg">
                 <div className="flex items-center justify-between mb-8">
                   <h1 className="text-white text-xl md:text-2xl">
-                    Pronostico de todos los productos
+                    Pronostico de todos los productos Suavizado Exponencial
                   </h1>
-                  <Link to="/" className="flex items-center gap-2 text-primary">
-                    <RiArrowRightLine />
-                  </Link>
                 </div>
 
                 <div>
@@ -442,11 +445,8 @@ const Dashboard = () => {
               <div className="bg-secondary-100 p-8 rounded-lg">
                 <div className="flex items-center justify-between mb-8">
                   <h1 className="text-white text-xl md:text-2xl">
-                    Pronostico de todos los productos
+                    Pronostico de un producto
                   </h1>
-                  <Link to="/" className="flex items-center gap-2 text-primary">
-                    <RiArrowRightLine />
-                  </Link>
                 </div>
                 <div className="md:col-span-3">
                   <div className="relative mb-4">
@@ -542,11 +542,8 @@ const Dashboard = () => {
               <div className="bg-secondary-100 p-8 rounded-lg">
                 <div className="flex items-center justify-between mb-8">
                   <h1 className="text-white text-xl md:text-2xl">
-                    Pronostico de todos los productos
+                    Pronostico de todos los productos ARIMA
                   </h1>
-                  <Link to="/" className="flex items-center gap-2 text-primary">
-                    <RiArrowRightLine />
-                  </Link>
                 </div>
 
                 <div>
@@ -587,11 +584,8 @@ const Dashboard = () => {
               <div className="bg-secondary-100 p-8 rounded-lg">
                 <div className="flex items-center justify-between mb-8">
                   <h1 className="text-white text-xl md:text-2xl">
-                    Pronostico de todos los productos
+                    Pronostico de un producto
                   </h1>
-                  <Link to="/" className="flex items-center gap-2 text-primary">
-                    <RiArrowRightLine />
-                  </Link>
                 </div>
                 <div className="md:col-span-3">
                   <div className="relative mb-4">
@@ -687,11 +681,8 @@ const Dashboard = () => {
               <div className="bg-secondary-100 p-8 rounded-lg">
                 <div className="flex items-center justify-between mb-8">
                   <h1 className="text-white text-xl md:text-2xl">
-                    Pronostico de todos los productos
+                    Pronostico de todos los productos SARIMA
                   </h1>
-                  <Link to="/" className="flex items-center gap-2 text-primary">
-                    <RiArrowRightLine />
-                  </Link>
                 </div>
 
                 <div>
@@ -732,11 +723,8 @@ const Dashboard = () => {
               <div className="bg-secondary-100 p-8 rounded-lg">
                 <div className="flex items-center justify-between mb-8">
                   <h1 className="text-white text-xl md:text-2xl">
-                    Pronostico de todos los productos
+                    Pronostico de un producto
                   </h1>
-                  <Link to="/" className="flex items-center gap-2 text-primary">
-                    <RiArrowRightLine />
-                  </Link>
                 </div>
                 <div className="md:col-span-3">
                   <div className="relative mb-4">
