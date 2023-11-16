@@ -12,6 +12,9 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 import { Link } from "react-router-dom";
 
 const Header = () => {
+  //const token = sessionStorage.getItem("token");
+  const username = sessionStorage.getItem("username");
+
   return (
     <header className="h-[7vh] md:h-[10vh] border-b border-secondary-100 p-8 flex items-center justify-end">
       <nav className="flex items-center gap-2">
@@ -27,7 +30,6 @@ const Header = () => {
           align="end"
           arrow
           transition
-          arrowClassName="bg-secondary-100"
           menuClassName="bg-secondary-100 p-4"
         >
           <h1 className="text-gray-300 text-center font-medium">
@@ -45,7 +47,7 @@ const Header = () => {
               />
               <div className="text-sm flex flex-col">
                 <div className="flex items-center justify-between gap-4">
-                  <span>Jorge Luis Trejo</span>{" "}
+                  <span>{username}</span>{" "}
                   <span className="text-[8px]">21/10/2022</span>
                 </div>
                 <p className="text-gray-500 text-xs">
@@ -105,13 +107,12 @@ const Header = () => {
                 src="https://img.freepik.com/foto-gratis/feliz-optimista-guapo-gerente-ventas-latina-apuntando-lado-mirando-camara_1262-12679.jpg"
                 className="w-6 h-6 object-cover rounded-full"
               />
-              <span>Jorge Luis Trejo</span>
+              <span>{username}</span>
               <RiArrowDownSLine />
             </MenuButton>
           }
           align="end"
           arrow
-          arrowClassName="bg-secondary-100"
           transition
           menuClassName="bg-secondary-100 p-4"
         >
@@ -125,8 +126,7 @@ const Header = () => {
                 className="w-8 h-8 object-cover rounded-full"
               />
               <div className="flex flex-col text-sm">
-                <span className="text-sm">Jorge Luis Trejo</span>
-                <span className="text-xs text-gray-500">jorge@gmail.com</span>
+                <span className="text-sm">{username}</span>
               </div>
             </Link>
           </MenuItem>

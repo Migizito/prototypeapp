@@ -15,6 +15,7 @@
     "@szhsin/react-menu": "^4.0.3",
     "apexcharts": "^3.43.0",
     "axios": "^1.5.1",
+    "jsonwebtoken": "^9.0.2",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.2.0",

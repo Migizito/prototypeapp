@@ -5,20 +5,22 @@ import { RiSearch2Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 // import { Switch } from "@headlessui/react";
 
-const Productos = () => {
-  const [products, setProducts] = useState([]);
+const Users = () => {
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const getProducts = async () => {
+    const getUsers = async () => {
       try {
-        const response = await axios.get(`https://localhost:7138/api/Product`);
-        setProducts(response.data.resultado);
+        const response = await axios.get(
+          `https://localhost:7138/api/Auth/Usuarios`
+        );
+        setUsers(response.data.resultado);
       } catch (error) {
         console.error("Error al obtener los pronósticos:", error);
       }
     };
 
-    getProducts();
+    getUsers();
   }, []);
 
   return (
@@ -26,43 +28,45 @@ const Productos = () => {
       {/* Title */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-4 mb-10">
         <div>
-          <h1 className="font-bold text-gray-100 text-3xl">Productos</h1>
+          <h1 className="font-bold text-gray-100 text-3xl">Usuarios</h1>
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <Link to="/" className="hover:text-primary transition-colors">
               Home
             </Link>
             <span>-</span>
-            <span>Productos</span>
+            <span>Usuarios</span>
           </div>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-3">
-        {products.map((product) => (
-          <div
-            key={product.productID}
-            className="border p-4 rounded-md shadow-md"
-          >
-            <h2 className="text-lg font-bold mb-2">{product.nombreProducto}</h2>
+        {users.map((user) => (
+          <div key={user.userID} className="border p-4 rounded-md shadow-md">
+            <h2 className="text-lg font-bold mb-2">{user.username}</h2>
             <p>
-              <span className="font-bold">ID:</span> {product.productID}
+              <span className="font-bold">Email:</span> {user.email}
             </p>
-            <p>
-              <span className="font-bold">Precio:</span> ${product.precio}
-            </p>
-            <p>
-              <span className="font-bold">Descripción:</span>{" "}
-              {product.descripcion}
-            </p>
-            <p>
-              <span className="font-bold">Cantidad en inventario:</span>{" "}
-              {product.cantidadEnInventario}
-            </p>
+            <div>
+              <div className="font-bold flex">
+                Rol:
+                <div className="mx-2 font-normal">
+                  {user.roles.map((rol, index) => (
+                    <p key={index}>
+                      {rol.roleID === 1
+                        ? "ADMIN"
+                        : rol.roleID === 2
+                        ? "VENDEDOR"
+                        : "Otro Rol"}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
       {/* Portada */}
       <div className="bg-secondary-100 p-8 rounded-lg grid w-full items-center">
-        <h1 className="text-3xl">Ingresar Producto</h1>
+        <h1 className="text-3xl">Ingresar Usuario</h1>
         <hr className="my-8 border-gray-500/30" />
         <form className="w-full">
           <div className="flex items-center mb-8 w-full">
@@ -71,14 +75,14 @@ const Productos = () => {
               <input
                 type="text"
                 className="bg-secondary-900 outline-none py-2 pr-4 pl-10 rounded-lg placeholder:text-gray-500 w-full"
-                placeholder="Buscar Producto"
+                placeholder="Buscar Usuario"
               />
             </div>
           </div>
           <div className="flex flex-col gap-y-2 md:flex-row md:items-center mb-8">
             <div className="w-full md:w-1/4">
               <p>
-                Producto <span className="text-red-500">*</span>
+                Usuario <span className="text-red-500">*</span>
               </p>
             </div>
             <div className="flex-1 flex items-center gap-4">
@@ -145,4 +149,4 @@ const Productos = () => {
   );
 };
 
-export default Productos;
+export default Users;

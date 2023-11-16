@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 //Icons
 import {
   RiMailFill,
@@ -10,6 +11,47 @@ import {
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [user, setUser] = useState("");
+  const [password, setPassword] = useState(""); // Hook para gestionar el historial de navegación
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (validate()) {
+      try {
+        const response = await axios.post(
+          "https://localhost:7138/api/Auth/Login",
+          {
+            Username: user,
+            Password: password,
+          }
+        );
+
+        const token = response.data.token;
+        const username = response.data.userName;
+        const userId = response.data.userId;
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("userId", userId);
+        navigate("/");
+      } catch (error) {
+        console.error("Error logging in:", error.response.data);
+      }
+    }
+  };
+
+  const validate = () => {
+    let result = true;
+    if (user === "" || user === null) {
+      result = false;
+      console.log("Please enter a username");
+    }
+    if (password === "" || password === null) {
+      result = false;
+      console.log("Please enter a password");
+    }
+    return result;
+  };
 
   return (
     <div className="bg-secondary-100 p-8 rounded-xl shadow-2xl w-auto lg:w-[450px]">
@@ -17,7 +59,7 @@ const Login = () => {
         Iniciar Sesión
       </h1>
 
-      <form className="mb-8">
+      <form className="mb-8" onSubmit={handleLogin}>
         <button className="flex items-center justify-center py-3 px-4 gap-4 bg-secondary-900 w-full rounded-full mb-8 text-gray-200">
           <img
             src="https://rotulosmatesanz.com/wp-content/uploads/2017/09/2000px-Google_G_Logo.svg_.png"
@@ -28,15 +70,19 @@ const Login = () => {
         <div className="relative mb-4">
           <RiMailFill className="absolute top-1/2 -translate-y-1/2 left-2" />
           <input
-            type="email"
+            type="text"
+            value={user}
+            onChange={(e) => setUser(e.target.value)}
             className="py-3 pl-8 pr-4 bg-secondary-900 w-full outline-none rounded-lg focus:border focus:border-gray-600"
-            placeholder="Correo electrónico"
+            placeholder="Username"
           />
         </div>
         <div className="relative mb-8">
           <RiLockFill className="absolute top-1/2 -translate-y-1/2 left-2" />
           <input
             type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="py-3 px-8 bg-secondary-900 w-full outline-none rounded-lg focus:border focus:border-gray-600"
             placeholder="Contraseña"
           />
@@ -57,7 +103,7 @@ const Login = () => {
             type="submit"
             className="bg-primary/70 uppercase text-gray-800 font-bold text-sm w-full py-3 px-4 rounded-lg hover:text-gray-200 transition-colors"
           >
-            <Link to="/">Ingresar</Link>
+            Ingresar
           </button>
         </div>
       </form>
