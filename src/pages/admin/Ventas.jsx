@@ -7,17 +7,18 @@ import { Link } from "react-router-dom";
 
 const Ventas = () => {
   const [ventas, setVentas] = useState([]);
+  const url = "https://localhost:7175/api/";
 
   useEffect(() => {
     const getVentas = async () => {
       try {
-        const response = await axios.get(`https://localhost:7138/api/Venta`);
+        const endpoint = "Venta"; // Replace 'Producto' with the desired endpoint
+        const response = await axios.get(`${url}${endpoint}`);
         const ventasConNombresProductos = await Promise.all(
           response.data.resultado.map(async (venta) => {
-            const vendedor = await obtenerUsuarioPorId(venta.vendedorId);
             const detalleVentasConNombres = await Promise.all(
               venta.detalleVentas.map(async (detalle) => {
-                const producto = await obtenerProductoPorId(detalle.productID);
+                const producto = await obtenerProductoPorId(detalle.productoID);
                 return { ...detalle, nombreProducto: producto.nombreProducto };
               })
             );
@@ -25,7 +26,6 @@ const Ventas = () => {
             return {
               ...venta,
               detalleVentas: detalleVentasConNombres,
-              nombreUsuario: vendedor.username,
             };
           })
         );
@@ -42,18 +42,7 @@ const Ventas = () => {
   const obtenerProductoPorId = async (productId) => {
     try {
       const response = await axios.get(
-        `https://localhost:7138/api/Product/id:int?id=${productId}`
-      );
-      return response.data.resultado;
-    } catch (error) {
-      console.error("Error al obtener el producto:", error);
-    }
-  };
-
-  const obtenerUsuarioPorId = async (userId) => {
-    try {
-      const response = await axios.get(
-        `https://localhost:7138/api/Auth/id:int?id=${userId}`
+        `https://localhost:7175/api/Producto/id:int?id=${productId}`
       );
       return response.data.resultado;
     } catch (error) {
@@ -75,11 +64,27 @@ const Ventas = () => {
             <span>Ventas</span>
           </div>
         </div>
+        <Link
+          to="/registrar-ventas"
+          className="bg-primary/80 text-black py-2 px-4 rounded-lg hover:bg-primary transition-colors justify-self md:justify-end"
+        >
+          Nueva Venta
+        </Link>
+      </div>
+      <div className="flex items-center mb-8 w-full">
+        <div className="relative w-full">
+          <RiSearch2Line className="absolute top-1/2 -translate-y-1/2 left-4" />
+          <input
+            type="text"
+            className="bg-secondary-100 outline-none py-2 pr-4 pl-10 rounded-lg placeholder:text-gray-500 w-full"
+            placeholder="Buscar Venta"
+          />
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-3">
         {ventas.map((sale) => (
-          <div key={sale.saleId} className="border p-4 rounded-md shadow-md">
-            <h2 className="text-lg font-bold mb-2">Venta ID: {sale.saleId}</h2>
+          <div key={sale.ventaId} className="border p-4 rounded-md shadow-md">
+            <h2 className="text-lg font-bold mb-2">Venta ID: {sale.ventaId}</h2>
             <p>
               <span className="font-bold">Fecha de Venta:</span>{" "}
               {sale.fechaDeVenta}
@@ -87,13 +92,10 @@ const Ventas = () => {
             <p>
               <span className="font-bold">Monto:</span> {sale.monto}
             </p>
-            <p>
-              <span className="font-bold">Vendedor:</span> {sale.nombreUsuario}
-            </p>
             <h3 className="text-md font-bold mt-2">Detalle de Ventas:</h3>
             <ul>
               {sale.detalleVentas.map((detalle) => (
-                <li key={detalle.detailID}>
+                <li key={detalle.detalleID}>
                   Producto ID: {detalle.nombreProducto}, Cantidad Vendida:{" "}
                   {detalle.cantidadVendida}
                 </li>
@@ -101,101 +103,6 @@ const Ventas = () => {
             </ul>
           </div>
         ))}
-      </div>
-      {/* Portada */}
-      <div className="bg-secondary-100 p-8 rounded-lg grid w-full items-center">
-        <h1 className="text-3xl">Ingresar venta</h1>
-        <hr className="my-8 border-gray-500/30" />
-        <form className="w-full">
-          <div className="flex items-center mb-8 w-full">
-            <div className="relative w-full">
-              <RiSearch2Line className="absolute top-1/2 -translate-y-1/2 left-4" />
-              <input
-                type="text"
-                className="bg-secondary-900 outline-none py-2 pr-4 pl-10 rounded-lg placeholder:text-gray-500 w-full"
-                placeholder="Buscar Producto"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-y-2 md:flex-row md:items-center mb-8">
-            <div className="w-full md:w-1/4">
-              <p>
-                Productos <span className="text-red-500">*</span>
-              </p>
-            </div>
-            <div className="flex-1 flex items-center gap-4">
-              <div className="w-full">
-                <input
-                  type="text"
-                  className="w-full py-2 px-4 outline-none rounded-lg bg-secondary-900"
-                  placeholder="Nombre del producto"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row md:items-center gap-y-2 mb-8">
-            <div className="w-full md:w-1/4">
-              <p>
-                CantidadVendida <span className="text-red-500">*</span>
-              </p>
-            </div>
-            <div className="flex-1">
-              <input
-                type="text"
-                className="w-full py-2 px-4 outline-none rounded-lg bg-secondary-900"
-                placeholder="Cantidad"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row md:items-center gap-y-2 mb-8">
-            <div className="w-full md:w-1/4">
-              <p>
-                MontoAPagar <span className="text-red-500">*</span>
-              </p>
-            </div>
-            <div className="flex-1">
-              <input
-                type="text"
-                className="w-full py-2 px-4 outline-none rounded-lg bg-secondary-900"
-                placeholder="Monto"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row md:items-center gap-y-2 mb-8">
-            <div className="w-full md:w-1/4">
-              <p>
-                Fecha <span className="text-red-500">*</span>
-              </p>
-            </div>
-            <div className="flex-1">
-              <input
-                type="text"
-                className="w-full py-2 px-4 outline-none rounded-lg bg-secondary-900"
-                placeholder="Fecha"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row md:items-center gap-y-2 mb-8">
-            <div className="w-full md:w-1/4">
-              <p>
-                Vendedor <span className="text-red-500">*</span>
-              </p>
-            </div>
-            <div className="flex-1">
-              <input
-                type="text"
-                className="w-full py-2 px-4 outline-none rounded-lg bg-secondary-900"
-                placeholder="Vendedor"
-              />
-            </div>
-          </div>
-        </form>
-        <hr className="my-8 border-gray-500/30" />
-        <div className="flex justify-end">
-          <button className="bg-primary/80 text-black py-2 px-4 rounded-lg hover:bg-primary transition-colors">
-            Guardar
-          </button>
-        </div>
       </div>
     </div>
   );

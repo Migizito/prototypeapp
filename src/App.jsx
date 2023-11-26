@@ -13,9 +13,11 @@ import Ventas from "./pages/admin/Ventas";
 import Tickets from "./pages/admin/Tickets";
 import Profile from "./pages/admin/Profile";
 import Dashboard from "./pages/admin/Dashboard";
-import Inventario from "./pages/admin/Inventario";
 import Productos from "./pages/admin/Productos";
 import Users from "./pages/admin/Users";
+import RegistrarVentas from "./pages/admin/RegistrarVentas";
+import { RegistrarProductos } from "./pages/admin/RegistrarProductos";
+import { RegistrarUsuarios } from "./pages/admin/RegistrarUsuarios";
 
 function App() {
   return (
@@ -29,7 +31,9 @@ function App() {
         <Route path="/" element={<LayoutAdmin />}>
           <Route index element={<Home />} />
           <Route path="ventas" element={<Ventas />} />
-          <Route path="inventario" element={<Inventario />} />
+          <Route path="registrar-ventas" element={<RegistrarVentas />} />
+          <Route path="registrar-usuarios" element={<RegistrarUsuarios />} />
+          <Route path="registrar-productos" element={<RegistrarProductos />} />
           <Route path="productos" element={<Productos />} />
           <Route path="users" element={<Users />} />
           <Route path="tickets" element={<Tickets />} />
