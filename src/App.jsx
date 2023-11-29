@@ -18,6 +18,7 @@ import Users from "./pages/admin/Users";
 import RegistrarVentas from "./pages/admin/RegistrarVentas";
 import { RegistrarProductos } from "./pages/admin/RegistrarProductos";
 import { RegistrarUsuarios } from "./pages/admin/RegistrarUsuarios";
+import Pronostico from "./pages/admin/Pronostico";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="tickets" element={<Tickets />} />
           <Route path="perfil" element={<Profile />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="pronostico" element={<Pronostico />} />
         </Route>
 
         <Route path="*" element={<Error404 />} />

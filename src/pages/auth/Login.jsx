@@ -12,24 +12,22 @@ import {
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState("");
-  const [password, setPassword] = useState(""); // Hook para gestionar el historial de navegación
+  const [password, setPassword] = useState("");
+  const url = "https://beagranelapisv.azurewebsites.net/api/"; // Hook para gestionar el historial de navegación
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     if (validate()) {
       try {
-        const response = await axios.post(
-          "https://localhost:7138/api/Auth/Login",
-          {
-            Username: user,
-            Password: password,
-          }
-        );
+        const response = await axios.post(`${url}Auth/Login`, {
+          Username: user,
+          Password: password,
+        });
 
         const token = response.data.token;
-        const username = response.data.userName;
-        const userId = response.data.userId;
+        const username = response.data.username;
+        const userId = response.data.usuarioID;
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("username", username);
         sessionStorage.setItem("userId", userId);

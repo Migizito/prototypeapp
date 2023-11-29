@@ -9,7 +9,7 @@ export const RegistrarProductos = () => {
     cantidadEnInventario: 0,
     precio: 0,
   });
-  const url = "https://localhost:7175/api/";
+  const url = "https://beagranelapisv.azurewebsites.net/api/";
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProducto((prevProducto) => ({ ...prevProducto, [name]: value }));

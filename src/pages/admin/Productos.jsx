@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const Productos = () => {
   const [products, setProducts] = useState([]);
-  const url = "https://localhost:7175/api/";
+  const url = "https://beagranelapisv.azurewebsites.net/api/";
   useEffect(() => {
     const getProducts = async () => {
       try {

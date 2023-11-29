@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
-  const url = "https://localhost:7175/api/Auth/";
+  const url = "https://beagranelapisv.azurewebsites.net/api/Auth/";
   useEffect(() => {
     const getUsers = async () => {
       try {

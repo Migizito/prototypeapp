@@ -47,6 +47,14 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
+                to="/pronostico"
+                className="flex items-center gap-4 py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
+              >
+                <RiDashboardLine className="text-primary" /> Pronostico
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/ventas"
                 className="flex items-center gap-4 py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
               >

@@ -11,6 +11,7 @@ const RegistrarVentas = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [productById, setProductById] = useState([]);
   const [products, setProducts] = useState([]);
+  const url = "https://beagranelapisv.azurewebsites.net/api/";
   const [formData, setFormData] = useState({
     fechaDeVenta: new Date().toISOString(),
     detallesVenta: [
@@ -70,10 +71,7 @@ const RegistrarVentas = () => {
   const handleSubmit = async () => {
     try {
       console.log("Datos a enviar:", formData);
-      const response = await axios.post(
-        "xhttps://localhost:7175/api/Venta/CrearVenta",
-        formData
-      );
+      const response = await axios.post(`${url}Venta/CrearVenta`, formData);
       Swal.fire({
         icon: "success",
         title:
@@ -104,7 +102,7 @@ const RegistrarVentas = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const response = await axios.get(`https://localhost:7175/api/Producto`);
+        const response = await axios.get(`${url}Producto`);
         setProducts(response.data.resultado);
       } catch (error) {
         console.error("Error al obtener los pronósticos:", error);
@@ -117,7 +115,7 @@ const RegistrarVentas = () => {
   const getProductById = async (productoId) => {
     try {
       const response = await axios.get(
-        `https://localhost:7175/api/Producto/id:int?id=${productoId}`
+        `${url}Producto/id:int?id=${productoId}`
       );
       setProductById(response.data.resultado);
     } catch (error) {

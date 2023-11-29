@@ -8,14 +8,12 @@ export const RegistrarUsuarios = () => {
     contraseña: "",
     rol: 0,
   });
+  const url = "https://beagranelapisv.azurewebsites.net/api/";
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "https://localhost:7175/api/Auth/Register",
-        formData
-      );
+      const response = await axios.post(`${url}Auth/Register`, formData);
       if (response.status === 200) {
         console.log("Registro exitoso:", response.data);
         Swal.fire({

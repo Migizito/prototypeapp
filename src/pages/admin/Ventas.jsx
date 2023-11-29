@@ -3,26 +3,47 @@ import axios from "axios";
 // Icons
 import { RiSearch2Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
-// import { Switch } from "@headlessui/react";
+import bluebird from "bluebird";
 
 const Ventas = () => {
   const [ventas, setVentas] = useState([]);
-  const url = "https://localhost:7175/api/";
+  const [productosCache, setProductosCache] = useState({});
+  const url = "https://beagranelapisv.azurewebsites.net/api/";
 
   useEffect(() => {
     const getVentas = async () => {
       try {
-        const endpoint = "Venta"; // Replace 'Producto' with the desired endpoint
+        const endpoint = "Venta";
         const response = await axios.get(`${url}${endpoint}`);
         const ventasConNombresProductos = await Promise.all(
           response.data.resultado.map(async (venta) => {
-            const detalleVentasConNombres = await Promise.all(
-              venta.detalleVentas.map(async (detalle) => {
-                const producto = await obtenerProductoPorId(detalle.productoID);
-                return { ...detalle, nombreProducto: producto.nombreProducto };
-              })
+            const detalleVentasConNombres = await bluebird.map(
+              venta.detalleVentas,
+              async (detalle) => {
+                // Verificar la caché antes de realizar una nueva solicitud
+                if (productosCache[detalle.productoID]) {
+                  return {
+                    ...detalle,
+                    nombreProducto:
+                      productosCache[detalle.productoID].nombreProducto,
+                  };
+                } else {
+                  const producto = await obtenerProductoPorId(
+                    detalle.productoID
+                  );
+                  // Actualizar la caché
+                  setProductosCache((prevCache) => ({
+                    ...prevCache,
+                    [detalle.productoID]: producto,
+                  }));
+                  return {
+                    ...detalle,
+                    nombreProducto: producto.nombreProducto,
+                  };
+                }
+              },
+              { concurrency: 5 } // Limita el número de solicitudes simultáneas
             );
-
             return {
               ...venta,
               detalleVentas: detalleVentasConNombres,
@@ -42,7 +63,7 @@ const Ventas = () => {
   const obtenerProductoPorId = async (productId) => {
     try {
       const response = await axios.get(
-        `https://localhost:7175/api/Producto/id:int?id=${productId}`
+        `https://beagranelapisv.azurewebsites.net/api/Producto/id:int?id=${productId}`
       );
       return response.data.resultado;
     } catch (error) {
@@ -96,7 +117,7 @@ const Ventas = () => {
             <ul>
               {sale.detalleVentas.map((detalle) => (
                 <li key={detalle.detalleID}>
-                  Producto ID: {detalle.nombreProducto}, Cantidad Vendida:{" "}
+                  Producto: {detalle.nombreProducto}, Cantidad Vendida:{" "}
                   {detalle.cantidadVendida}
                 </li>
               ))}
