@@ -50,7 +50,6 @@ const Ventas = () => {
             };
           })
         );
-
         setVentas(ventasConNombresProductos);
       } catch (error) {
         console.error("Error al obtener las ventas:", error);

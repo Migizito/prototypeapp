@@ -385,9 +385,6 @@ const Pronostico = () => {
               <Tab className="py-2 px-4 rounded-lg hover:bg-secondary-100 hover:text-gray-100 transition-colors outline-none ui-selected:bg-secondary-100 ui-selected:text-gray-100">
                 Modelo ARIMA
               </Tab>
-              <Tab className="py-2 px-4 rounded-lg hover:bg-secondary-100 hover:text-gray-100 transition-colors outline-none ui-selected:bg-secondary-100 ui-selected:text-gray-100">
-                Modelo SARIMA
-              </Tab>
             </div>
             <div className="flex justify-center">
               <div className="bg-primary/50 text-gray-200 hover:bg-primary/80 flex items-center gap-2 py-2 px-4 rounded-lg transition-colors">

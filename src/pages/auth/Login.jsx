@@ -22,7 +22,7 @@ const Login = () => {
       try {
         const response = await axios.post(`${url}Auth/Login`, {
           Username: user,
-          Password: password,
+          Contraseña: password,
         });
 
         const token = response.data.token;

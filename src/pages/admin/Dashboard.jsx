@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Chart from "react-apexcharts";
 import { RiArrowRightLine } from "react-icons/ri";
 import { Tab } from "@headlessui/react";
+import { RiSearch2Line } from "react-icons/ri";
 
 const Dashboard = () => {
   // Cambia a producto seleccionado
@@ -13,6 +14,33 @@ const Dashboard = () => {
   const [selectedYear, setSelectedYear] = useState("");
   const [topNextMonthForecast, setTopNextMonthForecast] = useState([]);
   const [productsPronosticos, setProductsPronosticos] = useState([]);
+  const [productoInput, setProductoInput] = useState("");
+  const [pronosticos, setPronosticos] = useState(null);
+  const [productos, setProductos] = useState([]);
+  const url = "https://beagranelapisv.azurewebsites.net/api/";
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const endpoint = "Producto"; // Reemplaza 'Producto' con el endpoint deseado
+        const response = await axios.get(`${url}${endpoint}`);
+
+        // Verifica si hay al menos un objeto en el array
+        if (response.data.resultado.length > 0) {
+          const nombreProductos = response.data.resultado.map(
+            (item) => item.nombreProducto
+          );
+          setProductos(nombreProductos);
+        } else {
+          console.error("El array está vacío");
+        }
+      } catch (error) {
+        console.error("Error al obtener los pronósticos:", error);
+      }
+    };
+
+    getProducts();
+  }, []);
 
   const getSalesByMonthYear = async (selectedMonth, selectedYear) => {
     try {
@@ -22,6 +50,19 @@ const Dashboard = () => {
       setSalesByMonthYear(response.data);
     } catch (error) {
       console.error("Error al obtener las ventas por mes y año:", error);
+    }
+  };
+
+  const getForecast = async (producto) => {
+    try {
+      // Obtener los pronósticos a través de la API
+      const response = await axios.get(
+        `http://localhost:8000/obtener-pronostico-producto-bd/${producto}`
+      );
+
+      setPronosticos(response.data);
+    } catch (error) {
+      console.error("Error al obtener los pronósticos:", error);
     }
   };
 
@@ -352,6 +393,60 @@ const Dashboard = () => {
                         </li>
                       ))}
                     </ul>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-secondary-100 p-8 rounded-lg">
+                <div className="flex items-center justify-between mb-8">
+                  <h1 className="text-white text-xl md:text-2xl">
+                    Pronostico de un producto
+                  </h1>
+                </div>
+                <div className="md:col-span-3">
+                  <div className="relative mb-4">
+                    <RiSearch2Line className="absolute top-1/2 -translate-y-1/2 left-4" />
+                    <select
+                      className="bg-secondary-900 outline-none py-2 pr-4 pl-10 rounded-lg placeholder:text-gray-500 w-full"
+                      value={productoInput}
+                      onChange={(e) => setProductoInput(e.target.value)}
+                    >
+                      <option value="">Selecciona un producto</option>
+                      {productos.map((producto) => (
+                        <option key={producto} value={producto}>
+                          {producto}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <div className="flex flex-col gap-2 mb-8">
+                      <div className="flex flex-wrap items-center gap-4">
+                        <button
+                          type="button"
+                          onClick={() => getForecast(productoInput)}
+                          className="bg-secondary-900 rounded-lg p-3 ml-8 text-white hover:bg-secondary-900/50 hover:text-gray-200 transition-colors"
+                        >
+                          Obtener pronóstico de {productoInput}
+                        </button>
+                      </div>
+                      <div className="md:px-10">
+                        {pronosticos ? (
+                          <div>
+                            <p>
+                              Nombre del Producto: {pronosticos.NombreProducto}
+                            </p>
+                            <p>Mes: {pronosticos.Month}</p>
+                            <p>
+                              Cantidad Pronosticada:{" "}
+                              {pronosticos.CantidadPronosticada}
+                            </p>
+                          </div>
+                        ) : (
+                          <p></p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
